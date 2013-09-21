@@ -23,12 +23,14 @@
 #include <App.hpp>
 
 #include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 // ----------------------------------------------------------------------------
 App::App( void ) :
     m_Window( 0 )
 {
-    m_Window = new sf::Window( sf::VideoMode(800,600), "Ponyban" );
+    m_Window = new sf::RenderWindow( sf::VideoMode(800,600), "Ponyban" );
+    m_Window->clear( sf::Color::Black );
 }
 
 // ----------------------------------------------------------------------------
@@ -54,7 +56,6 @@ void App::go( void )
                 m_Window->close();
 
         }
-
 
     }
 }

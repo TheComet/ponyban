@@ -22,7 +22,7 @@
 // forward declarations
 
 namespace sf {
-    class Window;
+    class RenderWindow;
 }
 
 /*!
@@ -49,5 +49,5 @@ public:
 
 private:
 
-    sf::Window* m_Window;
+    sf::RenderWindow* m_Window;
 };
