@@ -14,3 +14,47 @@
  * You should have received a copy of the GNU General Public License
  * along with Chocobun.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+// ----------------------------------------------------------------------------
+// include files
+
+#include <ChocobunInterface.hpp>
+
+#include <App.hpp>
+
+#include <SFML/Window.hpp>
+
+// ----------------------------------------------------------------------------
+App::App( void ) :
+    m_Window( 0 )
+{
+    m_Window = new sf::Window( sf::VideoMode(800,600), "Ponyban" );
+}
+
+// ----------------------------------------------------------------------------
+App::~App( void )
+{
+    delete m_Window;
+}
+
+// ----------------------------------------------------------------------------
+void App::go( void )
+{
+
+    while( m_Window->isOpen() )
+    {
+
+        // handle events
+        sf::Event event;
+        while( m_Window->pollEvent(event) )
+        {
+
+            // window close event
+            if( event.type == sf::Event::Closed )
+                m_Window->close();
+
+        }
+
+
+    }
+}

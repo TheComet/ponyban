@@ -14,3 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Chocobun.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+// ----------------------------------------------------------------------------
+// include files
+
+// ----------------------------------------------------------------------------
+// forward declarations
+
+namespace sf {
+    class Window;
+}
+
+/*!
+ * @brief Application object for this game
+ */
+class App
+{
+public:
+
+    /*!
+     * @brief Default constructor
+     */
+    App( void );
+
+    /*!
+     * @brief Default destructor
+     */
+    ~App( void );
+
+    /*!
+     * @brief Launches the application
+     */
+    void go( void );
+
+private:
+
+    sf::Window* m_Window;
+};

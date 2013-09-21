@@ -15,27 +15,20 @@
  * along with Chocobun.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// ----------------------------------------------------------------------------
-// include files
+// --------------------------------------------------------------
+// define export macros
+// --------------------------------------------------------------
 
-#include <App.hpp>
-#include <exception>
-#include <iostream>
+#ifndef __CHOCOBUN_CORE_EXPORT_HPP__
+#   define __CHOCOBUN_CORE_EXPORT_HPP__
 
-// ----------------------------------------------------------------------------
-// main entry point
-int main( int argc, char** argv )
-{
+    // headers
+#   include <core/Config.hpp>
 
-    App* theApp = new App();
+#   if defined(CHOCOBUN_CORE_DYNAMIC)
+#       define CHOCOBUN_CORE_API CHOCOBUN_CORE_EXPORT
+#   else
+#       define CHOCOBUN_CORE_API CHOCOBUN_CORE_IMPORT
+#   endif
 
-    try {
-        theApp->go();
-    }catch( std::exception& e ){
-        std::cerr << "Exception caught: " << e.what() << std::endl;
-    }
-
-    delete theApp;
-
-    return 0;
-}
+#endif // __CHOCOBUN_CORE_EXPORT_HPP__

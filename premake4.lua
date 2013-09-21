@@ -11,7 +11,9 @@ if os.get() == "windows" then
 	-- global header include directories
 	headerSearchDirs = {
 		rootDir_SFML .. "/include",
-		"dependencies/CHOCOBUN-1.0.0/include"
+		"dependencies/CHOCOBUN-1.0.0/include",
+
+		"include"
 	}
 	
 	-- lib include directories
@@ -21,14 +23,10 @@ if os.get() == "windows" then
 	}
 	
 	-- link libraries
-	linklibs_chocobun_core_debug = {
-	}
-	linklibs_chocobun_core_release = {
-	}
-	linklibs_chocobun_console_debug = {
+	linklibs_ponyban_debug = {
 		"chocobun-core_d"
 	}
-	linklibs_chocobun_console_release = {
+	linklibs_ponyban_release = {
 		"chocobun-core"
 	}
 
@@ -38,7 +36,9 @@ elseif os.get() == "linux" then
 	headerSearchDirs = {
 		"dependencies/CHOCOBUN-1.0.0/include",
 		"/usr/include",
-		"/usr/local/include/"
+		"/usr/local/include/",
+
+		"include"
 	}
 
 	-- lib include directories
@@ -49,14 +49,13 @@ elseif os.get() == "linux" then
 	}
 
 	-- link libraries
-	linklibs_chocobun_core_debug = {
+	linklibs_ponyban_debug = {
+		"chocobun-core",
+		"sfml-system",
+		"sfml-window",
+		"sfml-graphics"
 	}
-	linklibs_chocobun_core_release = {
-	}
-	linklibs_chocobun_console_debug = {
-		"chocobun-core"
-	}
-	linklibs_chocobun_console_release = {
+	linklibs_ponyban_release = {
 		"chocobun-core"
 	}
 	
@@ -66,7 +65,9 @@ elseif os.get() == "macosx" then
 	-- header search directories
 	headerSearchDirs = {
 		"dependencies/CHOCOBUN-1.0.0/include",
-		"/usr/include/"
+		"/usr/include/",
+
+		"include"
 	}
 
 	-- lib include directories
@@ -77,14 +78,10 @@ elseif os.get() == "macosx" then
 	}
 
 	-- link libraries
-	linklibs_chocobun_core_debug = {
-	}
-	linklibs_chocobun_core_release = {
-	}
-	linklibs_chocobun_console_debug = {
+	linklibs_ponyban_debug = {
 		"chocobun-core"
 	}
-	linklibs_chocobun_console_release = {
+	linklibs_ponyban_release = {
 		"chocobun-core"
 	}
 
@@ -119,7 +116,7 @@ solution "Ponyban"
 	}
 	
 	-------------------------------------------------------------------
-	-- Chocobun core
+	-- Ponyban core
 	-------------------------------------------------------------------
 	
 	project "ponyban"
@@ -142,7 +139,7 @@ solution "Ponyban"
 				"Symbols"
 			}
 			libdirs (libSearchDirs)
-			links (linklibs_chocobun_core_debug)
+			links (linklibs_ponyban_debug)
 			
 		configuration "Release"
 			targetdir "bin/release"
@@ -153,4 +150,4 @@ solution "Ponyban"
 				"Optimize"
 			}
 			libdirs (libSearchDirs)
-			links (linklibs_chocobun_core_release)	
+			links (linklibs_ponyban_release)	
