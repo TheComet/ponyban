@@ -21,18 +21,30 @@
 #include <EventDispatcher.hpp>
 
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics.hpp>
 
 // ----------------------------------------------------------------------------
-EventDispatcher::EventDispatcher( void ) :
-    m_Event( 0 )
+EventDispatcher::EventDispatcher( sf::RenderWindow* window ) :
+    m_Window( window )
 {
-    m_Event = new sf::Event();
 }
 
 // ----------------------------------------------------------------------------
 EventDispatcher::~EventDispatcher( void )
 {
-    delete m_Event;
+}
+
+// ----------------------------------------------------------------------------
+void EventDispatcher::processEventLoop( void )
+{
+    sf::Event event;
+    while( m_Window->pollEvent( event ) )
+    {
+
+        // window close event
+        if( event.type == sf::Event::Closed )
+            this->dispatchShutdown();
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -57,7 +69,8 @@ bool EventDispatcher::unregisterListener( EventDispatcherListener* listener )
 }
 
 // ----------------------------------------------------------------------------
-void EventDispatcher::processEventLoop( void )
+void EventDispatcher::dispatchShutdown( void )
 {
-
+    for( std::vector<EventDispatcherListener*>::iterator it = m_EventListeners.begin(); it != m_EventListeners.end(); ++it )
+        (*it)->onShutdown();
 }

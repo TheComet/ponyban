@@ -24,7 +24,7 @@
 // forward declarations
 
 namespace sf {
-    class Event;
+    class RenderWindow;
 }
 
 /*!
@@ -50,7 +50,7 @@ public:
     /*!
      * @brief Default constructor
      */
-    EventDispatcher( void );
+    EventDispatcher( sf::RenderWindow* window );
 
     /*!
      * @brief Default destructor
@@ -75,7 +75,12 @@ public:
 
 private:
 
-    sf::Event* m_Event;
+    /*!
+     * @brief Dispatches the shutdown signal
+     */
+    void dispatchShutdown( void );
+
+    sf::RenderWindow* m_Window;
     std::vector<EventDispatcherListener*> m_EventListeners;
 
 };

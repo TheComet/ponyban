@@ -18,6 +18,8 @@
 // ----------------------------------------------------------------------------
 // include files
 
+#include <EventDispatcher.hpp>
+
 // ----------------------------------------------------------------------------
 // forward declarations
 
@@ -28,7 +30,8 @@ namespace sf {
 /*!
  * @brief Application object for this game
  */
-class App
+class App :
+    public EventDispatcherListener
 {
 public:
 
@@ -49,5 +52,12 @@ public:
 
 private:
 
+    /*!
+     * @brief Shutdown listener
+     */
+    void onShutdown( void );
+
     sf::RenderWindow* m_Window;
+    EventDispatcher* m_EventDispatcher;
+    bool m_Shutdown;
 };

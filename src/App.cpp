@@ -23,19 +23,24 @@
 #include <App.hpp>
 
 #include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
 // ----------------------------------------------------------------------------
 App::App( void ) :
-    m_Window( 0 )
+    m_Window( 0 ),
+    m_EventDispatcher( 0 ),
+    m_Shutdown( false )
 {
     m_Window = new sf::RenderWindow( sf::VideoMode(800,600), "Ponyban" );
     m_Window->clear( sf::Color::Black );
+    m_EventDispatcher = new EventDispatcher( m_Window );
+    m_EventDispatcher->registerListener( this );
 }
 
 // ----------------------------------------------------------------------------
 App::~App( void )
 {
+    delete m_EventDispatcher;
     delete m_Window;
 }
 
@@ -43,19 +48,17 @@ App::~App( void )
 void App::go( void )
 {
 
-    while( m_Window->isOpen() )
+    while( !m_Shutdown )
     {
 
         // handle events
-        sf::Event event;
-        while( m_Window->pollEvent(event) )
-        {
-
-            // window close event
-            if( event.type == sf::Event::Closed )
-                m_Window->close();
-
-        }
+        m_EventDispatcher->processEventLoop();
 
     }
+}
+
+// ----------------------------------------------------------------------------
+void App::onShutdown( void )
+{
+    m_Shutdown = true;
 }
