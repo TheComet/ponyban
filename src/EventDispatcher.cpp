@@ -40,10 +40,28 @@ void EventDispatcher::processEventLoop( void )
     sf::Event event;
     while( m_Window->pollEvent( event ) )
     {
+        switch( event.type )
+        {
 
-        // window close event
-        if( event.type == sf::Event::Closed )
-            this->dispatchShutdown();
+            // window close event
+            case sf::Event::Closed :
+                this->dispatchShutdown();
+            break;
+
+            // keypresses
+            case sf::Event::KeyPressed :
+
+                // shutdown with escape key
+                if( event.key.code == sf::Keyboard::Escape )
+                    this->dispatchShutdown();
+
+                // TODO dispatch key event
+
+            break;
+
+            default:break;
+        }
+
     }
 }
 

@@ -33,6 +33,7 @@ App::App( void ) :
 {
     m_Window = new sf::RenderWindow( sf::VideoMode(800,600), "Ponyban" );
     m_Window->clear( sf::Color::Black );
+    m_Window->display();
     m_EventDispatcher = new EventDispatcher( m_Window );
     m_EventDispatcher->registerListener( this );
 }
