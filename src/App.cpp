@@ -18,12 +18,12 @@
 // ----------------------------------------------------------------------------
 // include files
 
-#include <ChocobunInterface.hpp>
-
 #include <App.hpp>
 
 #include <SFML/Window.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics.hpp>
+
+#include <ChocobunInterface.hpp>
 
 // ----------------------------------------------------------------------------
 App::App( void ) :
@@ -34,6 +34,7 @@ App::App( void ) :
     m_Window = new sf::RenderWindow( sf::VideoMode(800,600), "Ponyban" );
     m_Window->clear( sf::Color::Black );
     m_Window->display();
+
     m_EventDispatcher = new EventDispatcher( m_Window );
     m_EventDispatcher->registerListener( this );
 }
@@ -49,11 +50,48 @@ App::~App( void )
 void App::go( void )
 {
 
+    // create collection
+    Chocobun::Collection* m_Collection = new Chocobun::Collection( "collections/ksokoban-original.sok" );
+    m_Collection->initialise();
+    m_Collection->setActiveLevel( "Level #1" );
+
+    // load textures
+    sf::Texture* m_BoxTexture = new sf::Texture;
+    if( !m_BoxTexture->loadFromFile("assets/textures/box.gif"))
+        return;
+
+    // set up tiles
+    std::vector<sf::Sprite*> m_Map;
+    float tileSize = 800/m_Collection->getSizeY();
+    for( std::size_t x = 0; x != m_Collection->getSizeX(); ++x )
+    {
+        for( std::size_t y = 0; y != m_Collection->getSizeY(); ++y )
+        {
+            char tile = m_Collection->getTile( x, y );
+            sf::Sprite* newSprite;
+            switch( tile )
+            {
+                case '$' :
+                    newSprite = new sf::Sprite( *m_BoxTexture );
+                break;
+                default: break;
+            }
+            m_Map.push_back( newSprite );
+            newSprite->setPosition( x*tileSize, y*tileSize );
+            newSprite->setScale( tileSize/96, tileSize/96 );
+        }
+    }
+
     while( !m_Shutdown )
     {
 
         // handle events
         m_EventDispatcher->processEventLoop();
+
+        for( std::vector<sf::Sprite*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it )
+            m_Window->draw( **it );
+
+        m_Window->display();
 
     }
 }

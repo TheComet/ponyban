@@ -15,6 +15,9 @@
  * along with Ponyban.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef __EVENT_DISPATCHER_HPP__
+#define __EVENT_DISPATCHER_HPP__
+
 // ----------------------------------------------------------------------------
 // include files
 
@@ -25,6 +28,7 @@
 
 namespace sf {
     class RenderWindow;
+    class Event;
 }
 
 /*!
@@ -38,6 +42,18 @@ public:
      * @brief When the application has begin its shutdown process
      */
     virtual void onShutdown( void ){}
+
+    /*!
+     * @brief When a key was pressed.
+     * Consult the SFML documentation for more information.
+     */
+    virtual void onKeyPress( sf::Event& event ){}
+
+    /*!
+     * @brief When a key was released.
+     * Consult the SFML documentation for more information.
+     */
+    virtual void onKeyRelease( sf::Event& event){}
 };
 
 /*!
@@ -80,7 +96,19 @@ private:
      */
     void dispatchShutdown( void );
 
+    /*!
+     * @brief Dispatches the key press signal
+     */
+    void dispatchKeyPress( sf::Event& event );
+
+    /*!
+     * @brief Dispatches the key release signal
+     */
+    void dispatchKeyRelease( sf::Event& event );
+
     sf::RenderWindow* m_Window;
     std::vector<EventDispatcherListener*> m_EventListeners;
 
 };
+
+#endif // __EVENT_DISPATCHER_HPP__

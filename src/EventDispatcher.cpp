@@ -55,8 +55,14 @@ void EventDispatcher::processEventLoop( void )
                 if( event.key.code == sf::Keyboard::Escape )
                     this->dispatchShutdown();
 
-                // TODO dispatch key event
+                // dispatch key event
+                this->dispatchKeyPress( event );
 
+            break;
+
+            // key releases
+            case sf::Event::KeyReleased :
+                this->dispatchKeyRelease( event );
             break;
 
             default:break;
@@ -91,4 +97,18 @@ void EventDispatcher::dispatchShutdown( void )
 {
     for( std::vector<EventDispatcherListener*>::iterator it = m_EventListeners.begin(); it != m_EventListeners.end(); ++it )
         (*it)->onShutdown();
+}
+
+// ----------------------------------------------------------------------------
+void EventDispatcher::dispatchKeyPress( sf::Event& event )
+{
+    for( std::vector<EventDispatcherListener*>::iterator it = m_EventListeners.begin(); it != m_EventListeners.end(); ++it )
+        (*it)->onKeyPress( event );
+}
+
+// ----------------------------------------------------------------------------
+void EventDispatcher::dispatchKeyRelease( sf::Event& event )
+{
+    for( std::vector<EventDispatcherListener*>::iterator it = m_EventListeners.begin(); it != m_EventListeners.end(); ++it )
+        (*it)->onKeyRelease( event );
 }
