@@ -54,6 +54,11 @@ public:
      * Consult the SFML documentation for more information.
      */
     virtual void onKeyRelease( sf::Event& event){}
+
+    /*!
+     * @brief When the player moves.
+     */
+    virtual void onPlayerMove( const char& direction ){}
 };
 
 /*!
@@ -89,8 +94,6 @@ public:
      */
     void processEventLoop( void );
 
-private:
-
     /*!
      * @brief Dispatches the shutdown signal
      */
@@ -105,6 +108,13 @@ private:
      * @brief Dispatches the key release signal
      */
     void dispatchKeyRelease( sf::Event& event );
+
+    /*!
+     * @brief Dispatches the player move signal
+     */
+    void dispatchPlayerMove( const char direction );
+
+private:
 
     sf::RenderWindow* m_Window;
     std::vector<EventDispatcherListener*> m_EventListeners;

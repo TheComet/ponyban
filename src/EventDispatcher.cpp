@@ -112,3 +112,10 @@ void EventDispatcher::dispatchKeyRelease( sf::Event& event )
     for( std::vector<EventDispatcherListener*>::iterator it = m_EventListeners.begin(); it != m_EventListeners.end(); ++it )
         (*it)->onKeyRelease( event );
 }
+
+// ----------------------------------------------------------------------------
+void EventDispatcher::dispatchPlayerMove( const char direction )
+{
+    for( std::vector<EventDispatcherListener*>::iterator it = m_EventListeners.begin(); it != m_EventListeners.end(); ++it )
+        (*it)->onPlayerMove( direction );
+}
