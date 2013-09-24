@@ -11,7 +11,7 @@ if os.get() == "windows" then
 	-- global header include directories
 	headerSearchDirs = {
 		rootDir_SFML .. "/include",
-		"dependencies/CHOCOBUN-1.0.0/include",
+		"dependencies/chocobun/chocobun-core/",
 
 		"include"
 	}
@@ -19,7 +19,7 @@ if os.get() == "windows" then
 	-- lib include directories
 	libSearchDirs = {
 		rootDir_SFML .. "/lib",
-		"dependencies/CHOCOBUN-1.0.0/lib"
+		"dependencies/chocobun/lib"
 	}
 	
 	-- link libraries
@@ -34,7 +34,7 @@ elseif os.get() == "linux" then
 
 	-- header search directories
 	headerSearchDirs = {
-		"dependencies/CHOCOBUN-1.0.0/include",
+		"dependencies/chocobun/chocobun-core",
 		"/usr/include",
 		"/usr/local/include/",
 
@@ -43,7 +43,7 @@ elseif os.get() == "linux" then
 
 	-- lib include directories
 	libSearchDirs = {
-		"dependencies/CHOCOBUN-1.0.0/lib",
+		"dependencies/chocobun/bin/debug",
 		"/usr/lib",
 		"/usr/local/lib"
 	}
@@ -64,7 +64,7 @@ elseif os.get() == "macosx" then
 
 	-- header search directories
 	headerSearchDirs = {
-		"dependencies/CHOCOBUN-1.0.0/include",
+		"dependencies/chocobun/chocobun-core/include",
 		"/usr/include/",
 
 		"include"
@@ -72,7 +72,7 @@ elseif os.get() == "macosx" then
 
 	-- lib include directories
 	libSearchDirs = {
-		"dependencies/CHOCOBUN-1.0.0/lib",
+		"dependencies/chocobun/bin/debug",
 		"/usr/local/lib",
 		"/usr/lib"
 	}
@@ -114,9 +114,48 @@ solution "Ponyban"
 	defines {
 		"CHOCOBUN_CORE_DYNAMIC"
 	}
-	
+
 	-------------------------------------------------------------------
-	-- Ponyban core
+	-- Chocobun core
+	-------------------------------------------------------------------
+
+	project "chocobun-core"
+		kind "SharedLib"
+		language "C++"
+		files {
+			"dependencies/chocobun/chocobun-core/**.hpp",
+			"dependencies/chocobun/chocobun-core/**.cpp"
+		}
+
+		includedirs (headerSearchDirs)
+
+		configuration "Debug"	
+			targetdir "bin/debug"
+			if os.get() == "windows" then
+				implibdir = "bin/lib"
+			end
+			defines {
+				"DEBUG",
+				"_DEBUG"
+			}
+			flags {
+				"Symbols"
+			}
+			
+		configuration "Release"
+			targetdir "bin/release"
+			if os.get() == "windows" then
+				implibdir "bin/lib"
+			end
+			defines {
+				"NDEBUG"
+			}
+			flags {
+				"Optimize"
+			}
+
+	-------------------------------------------------------------------
+	-- Ponyban
 	-------------------------------------------------------------------
 	
 	project "ponyban"
