@@ -30,6 +30,8 @@ namespace sf {
     class Texture;
 }
 
+class AnimatedSprite;
+
 /*!
  * @brief Application object for this game
  */
@@ -68,6 +70,5 @@ private:
     EventDispatcher* m_EventDispatcher;
     bool m_Shutdown;
     Chocobun::Collection* m_Collection;
-    std::vector<sf::Sprite*> m_Map;
-    sf::Texture* m_PlayerTexture;
+    std::vector<AnimatedSprite*> m_Map;
 };

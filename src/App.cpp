@@ -19,6 +19,7 @@
 // include files
 
 #include <App.hpp>
+#include <AnimatedSprite.hpp>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -59,21 +60,7 @@ void App::go( void )
     m_Collection->validateLevel();
     m_Collection->addLevelListener( this );
 
-    // load textures
-    sf::Texture* m_BoxTexture = new sf::Texture();
-    sf::Texture* m_BoxOnGoalTexture = new sf::Texture();
-    sf::Texture* m_GoalTexture = new sf::Texture();
-    m_PlayerTexture = new sf::Texture();
-    sf::Texture* m_PlayerOnGoalTexture = new sf::Texture();
-    sf::Texture* m_WallTexture = new sf::Texture();
-    if( !m_BoxTexture->loadFromFile("assets/textures/box.gif") ) return;
-    if( !m_BoxOnGoalTexture->loadFromFile("assets/textures/box-on-goal.gif") ) return;
-    if( !m_GoalTexture->loadFromFile("assets/textures/goal.gif") ) return;
-    if( !m_PlayerTexture->loadFromFile("assets/textures/player.gif") ) return;
-    if( !m_PlayerOnGoalTexture->loadFromFile("assets/textures/player-on-goal.gif") ) return;
-    if( !m_WallTexture->loadFromFile("assets/textures/stone_1.gif") ) return;
-
-    // set up tiles
+    // set up static tiles
     float tileSize = 800.0 / static_cast<float>(m_Collection->getSizeX());
     if( tileSize > 600.0 / static_cast<float>(m_Collection->getSizeY()) ) tileSize = 600.0 / static_cast<float>(m_Collection->getSizeY());
     std::cout << "dimensions: " << m_Collection->getSizeX() << "," << m_Collection->getSizeY() << std::endl;
@@ -84,34 +71,40 @@ void App::go( void )
         {
             char tile = m_Collection->getTile( x, y );
             std::cout << tile;
-            sf::Sprite* newSprite;
+            AnimatedSprite* newSprite;
 
             switch( tile )
             {
-                case '$' : newSprite = new sf::Sprite( *m_BoxTexture ); break;
-                case '*' : newSprite = new sf::Sprite( *m_BoxOnGoalTexture ); break;
-                case '@' : newSprite = new sf::Sprite( *m_PlayerTexture ); break;
-                case '+' : newSprite = new sf::Sprite( *m_PlayerOnGoalTexture ); break;
-                case '.' : newSprite = new sf::Sprite( *m_GoalTexture ); break;
-                case '#' : newSprite = new sf::Sprite( *m_WallTexture ); break;
-                default: newSprite = new sf::Sprite(); break;
+                case '*' : newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/goal.gif"); break;
+                case '+' : newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/goal.gif"); break;
+                case '.' : newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/goal.gif",2,2); break;
+                case '#' : newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/stone_1.gif"); break;
+                default: newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/background.jpg"); break;
             }
 
             m_Map.push_back( newSprite );
             newSprite->setPosition( x*tileSize, y*tileSize );
             newSprite->setScale( tileSize/96, tileSize/96 );
+            newSprite->setFrameDelay( sf::milliseconds(200) );
+            newSprite->play();
         }
         std::cout << std::endl;
     }
 
+    sf::Clock clock;
+    clock.restart();
     while( !m_Shutdown )
     {
 
         // handle events
         m_EventDispatcher->processEventLoop();
 
-        for( std::vector<sf::Sprite*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it )
-            m_Window->draw( **it );
+        sf::Time elapsed = clock.restart();
+        for( std::vector<AnimatedSprite*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it )
+        {
+            (*it)->updateFrame( elapsed );
+            m_Window->draw( (*it)->getSprite() );
+        }
 
         m_Window->display();
 
@@ -127,26 +120,16 @@ void App::onShutdown( void )
 void App::onKeyPress( sf::Event& event )
 {
     if( event.key.code == sf::Keyboard::Up )
-    {
         m_Collection->moveUp();
-    }
+    if( event.key.code == sf::Keyboard::Down )
+        m_Collection->moveDown();
+    if( event.key.code == sf::Keyboard::Left )
+        m_Collection->moveLeft();
+    if( event.key.code == sf::Keyboard::Right )
+        m_Collection->moveRight();
 }
 
 void App::onSetTile( const std::size_t& x, const std::size_t& y, const char& tile )
 {
-    std::size_t pos = 0;
-    for( std::size_t fy = 0; fy != m_Collection->getSizeY(); ++fy )
-    {
-        for( std::size_t fx = 0; fx != m_Collection->getSizeX(); ++fx )
-        {
-            if( fx == x && fy == y )
-                break;
-            ++pos;
-        }
-    }
-
-    switch( tile )
-    {
-        case '@' : m_Map.at(pos)->setTexture( *m_PlayerTexture ); break;
-    }
+    std::size_t pos = y*m_Collection->getSizeX() + x;
 }
