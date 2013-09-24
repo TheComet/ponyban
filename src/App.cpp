@@ -58,7 +58,7 @@ void App::go( void )
     m_Collection->initialise();
     m_Collection->setActiveLevel( "Level #1" );
     m_Collection->validateLevel();
-    m_Collection->addLevelListener( this );
+    bool shit = m_Collection->addLevelListener( this );
 
     // set up static tiles
     float tileSize = 800.0 / static_cast<float>(m_Collection->getSizeX());
