@@ -44,13 +44,14 @@ elseif os.get() == "linux" then
 	-- lib include directories
 	libSearchDirs = {
 		"dependencies/chocobun/bin/debug",
+		"bin/debug",
 		"/usr/lib",
 		"/usr/local/lib"
 	}
 
 	-- link libraries
 	linklibs_ponyban_debug = {
-		"chocobun-core",
+		"chocobun-core_d",
 		"sfml-system",
 		"sfml-window",
 		"sfml-graphics"
@@ -73,13 +74,14 @@ elseif os.get() == "macosx" then
 	-- lib include directories
 	libSearchDirs = {
 		"dependencies/chocobun/bin/debug",
+		"bin/debug",
 		"/usr/local/lib",
 		"/usr/lib"
 	}
 
 	-- link libraries
 	linklibs_ponyban_debug = {
-		"chocobun-core"
+		"chocobun-core_d"
 	}
 	linklibs_ponyban_release = {
 		"chocobun-core"
@@ -131,6 +133,7 @@ solution "Ponyban"
 
 		configuration "Debug"	
 			targetdir "bin/debug"
+			targetsuffix "_d"
 			if os.get() == "windows" then
 				implibdir = "bin/lib"
 			end
