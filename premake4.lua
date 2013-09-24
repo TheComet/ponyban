@@ -64,7 +64,7 @@ elseif os.get() == "macosx" then
 
 	-- header search directories
 	headerSearchDirs = {
-		"dependencies/chocobun/chocobun-core/include",
+		"dependencies/chocobun/chocobun-core",
 		"/usr/include/",
 
 		"include"
