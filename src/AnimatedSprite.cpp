@@ -49,6 +49,8 @@ bool AnimatedSprite::loadFromFile( const std::string& fileName, const unsigned l
     m_Size.y /= splitY;
     m_Sprite.setTexture( m_Texture );
     this->setFrame(0);
+
+    return true;
 }
 
 // ----------------------------------------------------------------------------
