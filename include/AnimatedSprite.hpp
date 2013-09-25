@@ -22,6 +22,7 @@
 // include files
 
 #include <iostream>
+#include <map>
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/Time.hpp>
@@ -167,9 +168,14 @@ public:
      */
     const sf::Sprite& getSprite( void ) const;
 
+    /*!
+     * @brief Gets a pointer to the underlying texture object.
+     */
+    const sf::Texture* const getTexturePtr( void ) const;
+
 private:
 
-    sf::Texture m_Texture;
+    sf::Texture* m_Texture;
     sf::Sprite m_Sprite;
     sf::Time m_FrameDelay;
     sf::Time m_TimePassed;
@@ -180,6 +186,9 @@ private:
     unsigned long m_CurrentFrame;
 
     bool m_IsPlaying;
+
+    static std::vector<AnimatedSprite*> m_AnimatedSpriteList;
+    static std::map<std::string, sf::Texture*> m_TextureMap;
 };
 
 #endif // __ANIMATED_SPRITE_HPP__

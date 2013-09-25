@@ -58,37 +58,57 @@ void App::go( void )
     m_Collection->initialise();
     m_Collection->setActiveLevel( "Level #1" );
     m_Collection->validateLevel();
-    bool shit = m_Collection->addLevelListener( this );
+    m_Collection->addLevelListener( this );
 
-    // set up static tiles
+    // prerequisits
     float tileSize = 800.0 / static_cast<float>(m_Collection->getSizeX());
     if( tileSize > 600.0 / static_cast<float>(m_Collection->getSizeY()) ) tileSize = 600.0 / static_cast<float>(m_Collection->getSizeY());
     std::cout << "dimensions: " << m_Collection->getSizeX() << "," << m_Collection->getSizeY() << std::endl;
     std::cout << "tile size: " << tileSize << std::endl;
+
+
+    // set up static tiles
     for( std::size_t y = 0; y != m_Collection->getSizeY(); ++y )
     {
         for( std::size_t x = 0; x != m_Collection->getSizeX(); ++x )
         {
             char tile = m_Collection->getTile( x, y );
-            std::cout << tile;
-            AnimatedSprite* newSprite;
+            AnimatedSprite* newSprite = new AnimatedSprite();
 
             switch( tile )
             {
-                case '*' : newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/goal.gif"); break;
-                case '+' : newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/goal.gif"); break;
-                case '.' : newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/goal.gif",2,2); break;
-                case '#' : newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/stone_1.gif"); break;
-                default: newSprite = new AnimatedSprite(); newSprite->loadFromFile("assets/textures/background.jpg"); break;
+                case '*' || '+' || '.' :
+                    newSprite->loadFromFile("assets/textures/goal.gif");
+                    break;
+                case '#' :
+                    newSprite->loadFromFile("assets/textures/stone_1.gif");
+                    break;
+                default:
+                    newSprite->loadFromFile("assets/textures/background.jpg");
+                    break;
             }
-
             m_Map.push_back( newSprite );
             newSprite->setPosition( x*tileSize, y*tileSize );
             newSprite->setScale( tileSize/96, tileSize/96 );
-            newSprite->setFrameDelay( sf::milliseconds(200) );
-            newSprite->play();
         }
         std::cout << std::endl;
+    }
+
+    // set up dynamic tiles
+    for( std::size_t y = 0; y != m_Collection->getSizeY(); ++y )
+    {
+        for( std::size_t x = 0; x != m_Collection->getSizeX(); ++x )
+        {
+            char tile = m_Collection->getTile( x, y );
+            AnimatedSprite* newSprite = new AnimatedSprite();
+
+            switch( tile )
+            {
+                case '$' || '*' :
+                    newSprite->loadFromFile("assets/textures/box.gif");
+                    break;
+            }
+        }
     }
 
     sf::Clock clock;
