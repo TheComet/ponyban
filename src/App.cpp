@@ -19,12 +19,10 @@
 // include files
 
 #include <App.hpp>
-#include <AnimatedSprite.hpp>
+#include <Game.hpp>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-
-#include <ChocobunInterface.hpp>
 
 #include <iostream>
 
@@ -32,7 +30,8 @@
 App::App( void ) :
     m_Window( 0 ),
     m_EventDispatcher( 0 ),
-    m_Shutdown( false )
+    m_Shutdown( false ),
+    m_Game( 0 )
 {
     m_Window = new sf::RenderWindow( sf::VideoMode(800,600), "Ponyban" );
     m_Window->clear( sf::Color::Black );
@@ -53,63 +52,10 @@ App::~App( void )
 void App::go( void )
 {
 
-    // create collection
-    m_Collection = new Chocobun::Collection( "collections/ksokoban-original.sok" );
-    m_Collection->initialise();
-    m_Collection->setActiveLevel( "Level #1" );
-    m_Collection->validateLevel();
-    m_Collection->addLevelListener( this );
-
-    // prerequisits
-    float tileSize = 800.0 / static_cast<float>(m_Collection->getSizeX());
-    if( tileSize > 600.0 / static_cast<float>(m_Collection->getSizeY()) ) tileSize = 600.0 / static_cast<float>(m_Collection->getSizeY());
-    std::cout << "dimensions: " << m_Collection->getSizeX() << "," << m_Collection->getSizeY() << std::endl;
-    std::cout << "tile size: " << tileSize << std::endl;
-
-
-    // set up static tiles
-    for( std::size_t y = 0; y != m_Collection->getSizeY(); ++y )
-    {
-        for( std::size_t x = 0; x != m_Collection->getSizeX(); ++x )
-        {
-            char tile = m_Collection->getTile( x, y );
-            AnimatedSprite* newSprite = new AnimatedSprite();
-
-            switch( tile )
-            {
-                case '*' || '+' || '.' :
-                    newSprite->loadFromFile("assets/textures/goal.gif");
-                    break;
-                case '#' :
-                    newSprite->loadFromFile("assets/textures/stone_1.gif");
-                    break;
-                default:
-                    newSprite->loadFromFile("assets/textures/background.jpg");
-                    break;
-            }
-            m_Map.push_back( newSprite );
-            newSprite->setPosition( x*tileSize, y*tileSize );
-            newSprite->setScale( tileSize/96, tileSize/96 );
-        }
-        std::cout << std::endl;
-    }
-
-    // set up dynamic tiles
-    for( std::size_t y = 0; y != m_Collection->getSizeY(); ++y )
-    {
-        for( std::size_t x = 0; x != m_Collection->getSizeX(); ++x )
-        {
-            char tile = m_Collection->getTile( x, y );
-            AnimatedSprite* newSprite = new AnimatedSprite();
-
-            switch( tile )
-            {
-                case '$' || '*' :
-                    newSprite->loadFromFile("assets/textures/box.gif");
-                    break;
-            }
-        }
-    }
+    m_Game = new Game();
+    m_Game->setScreenResolution( m_Window->getSize().x, m_Window->getSize().y );
+    m_Game->loadCollection("collections/ksokoban-original.sok");
+    m_Game->loadLevel("Level #1");
 
     sf::Clock clock;
     clock.restart();
@@ -119,12 +65,11 @@ void App::go( void )
         // handle events
         m_EventDispatcher->processEventLoop();
 
+        // dispatch udpdate event with delta time
         sf::Time elapsed = clock.restart();
-        for( std::vector<AnimatedSprite*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it )
-        {
-            (*it)->updateFrame( elapsed );
-            m_Window->draw( (*it)->getSprite() );
-        }
+        m_EventDispatcher->dispatchUpdate( elapsed );
+
+        m_Game->render( m_Window );
 
         m_Window->display();
 
@@ -137,19 +82,3 @@ void App::onShutdown( void )
     m_Shutdown = true;
 }
 
-void App::onKeyPress( sf::Event& event )
-{
-    if( event.key.code == sf::Keyboard::Up )
-        m_Collection->moveUp();
-    if( event.key.code == sf::Keyboard::Down )
-        m_Collection->moveDown();
-    if( event.key.code == sf::Keyboard::Left )
-        m_Collection->moveLeft();
-    if( event.key.code == sf::Keyboard::Right )
-        m_Collection->moveRight();
-}
-
-void App::onSetTile( const std::size_t& x, const std::size_t& y, const char& tile )
-{
-    std::size_t pos = y*m_Collection->getSizeX() + x;
-}

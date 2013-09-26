@@ -93,6 +93,13 @@ bool EventDispatcher::unregisterListener( EventDispatcherListener* listener )
 }
 
 // ----------------------------------------------------------------------------
+void EventDispatcher::dispatchUpdate( const sf::Time& delta )
+{
+    for( std::vector<EventDispatcherListener*>::iterator it = m_EventListeners.begin(); it != m_EventListeners.end(); ++it )
+        (*it)->onUpdate( delta );
+}
+
+// ----------------------------------------------------------------------------
 void EventDispatcher::dispatchShutdown( void )
 {
     for( std::vector<EventDispatcherListener*>::iterator it = m_EventListeners.begin(); it != m_EventListeners.end(); ++it )

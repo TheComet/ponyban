@@ -29,6 +29,7 @@
 namespace sf {
     class RenderWindow;
     class Event;
+    class Time;
 }
 
 /*!
@@ -37,6 +38,12 @@ namespace sf {
 class EventDispatcherListener
 {
 public:
+
+    /*!
+     * @brief When anything time-related needs to be updated
+     * @param delta The time space since this method was called last
+     */
+    virtual void onUpdate( const sf::Time& delta ){}
 
     /*!
      * @brief When the application has begin its shutdown process
@@ -57,6 +64,8 @@ public:
 
     /*!
      * @brief When the player moves.
+     * @param The direction in which the player has moved. This
+     * is either 'u', 'd', 'l', or 'r'
      */
     virtual void onPlayerMove( const char& direction ){}
 };
@@ -93,6 +102,11 @@ public:
      * @brief Processes the event loop and dispatches messages
      */
     void processEventLoop( void );
+
+    /*!
+     * @brief Dispatches the update signal
+     */
+    void dispatchUpdate( const sf::Time& delta );
 
     /*!
      * @brief Dispatches the shutdown signal
