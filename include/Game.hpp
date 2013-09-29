@@ -120,12 +120,19 @@ private:
      */
     void onSetTile( const std::size_t& x, const std::size_t& y, const char& tile );
 
-    sf::Vector2u m_ScreenResolution;
+    /*!
+     * @brief Tile move listener
+     */
+    void onMoveTile( const std::size_t& oldX, const std::size_t& oldY, const std::size_t& newX, const std::size_t& newY );
 
     Chocobun::Collection* m_Collection;
 
     std::vector<AnimatedSprite*> m_StaticMap;
     std::vector<AnimatedSprite*> m_Boxes;
+    AnimatedSprite* m_Player;
+
+    sf::Vector2u m_ScreenResolution;
+    float m_TileSize;
 };
 
 #endif // __GAME_HPP__

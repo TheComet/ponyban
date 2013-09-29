@@ -56,6 +56,7 @@ void App::go( void )
     m_Game->setScreenResolution( m_Window->getSize().x, m_Window->getSize().y );
     m_Game->loadCollection("collections/ksokoban-original.sok");
     m_Game->loadLevel("Level #1");
+    m_EventDispatcher->registerListener( m_Game );
 
     sf::Clock clock;
     clock.restart();
@@ -69,6 +70,7 @@ void App::go( void )
         sf::Time elapsed = clock.restart();
         m_EventDispatcher->dispatchUpdate( elapsed );
 
+        // render everything
         m_Game->render( m_Window );
 
         m_Window->display();

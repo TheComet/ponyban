@@ -29,7 +29,8 @@
 // ----------------------------------------------------------------------------
 Game::Game( void ) :
     m_Collection( 0 ),
-    m_ScreenResolution( 0, 0 )
+    m_ScreenResolution( 0, 0 ),
+    m_Player( 0 )
 {
 }
 
@@ -72,11 +73,11 @@ bool Game::loadLevel( const std::string& levelName )
         return false;
 
     // prerequisits
-    float tileSize = m_ScreenResolution.x / static_cast<float>(m_Collection->getSizeX());
-    if( tileSize > m_ScreenResolution.y / static_cast<float>(m_Collection->getSizeY()) )
-        tileSize = m_ScreenResolution.y / static_cast<float>(m_Collection->getSizeY());
+    m_TileSize = m_ScreenResolution.x / static_cast<float>(m_Collection->getSizeX());
+    if( m_TileSize > m_ScreenResolution.y / static_cast<float>(m_Collection->getSizeY()) )
+        m_TileSize = m_ScreenResolution.y / static_cast<float>(m_Collection->getSizeY());
     std::cout << "dimensions: " << m_Collection->getSizeX() << "," << m_Collection->getSizeY() << std::endl;
-    std::cout << "tile size: " << tileSize << std::endl;
+    std::cout << "tile size: " << m_TileSize << std::endl;
 
 
     // set up static tiles
@@ -87,23 +88,17 @@ bool Game::loadLevel( const std::string& levelName )
             char tile = m_Collection->getTile( x, y );
             AnimatedSprite* newSprite = new AnimatedSprite();
 
-            switch( tile )
-            {
-                case '*' || '+' || '.' :
-                    newSprite->loadFromFile("assets/textures/goal.gif");
-                    break;
-                case '#' :
-                    newSprite->loadFromFile("assets/textures/stone_1.gif");
-                    break;
-                default:
-                    newSprite->loadFromFile("assets/textures/background.jpg");
-                    break;
-            }
+            if( tile == '.' || tile == '*' || tile == '+' )
+                newSprite->loadFromFile("assets/textures/goal.png");
+            else if( tile == '#' )
+                newSprite->loadFromFile("assets/textures/wall.png");
+            else
+                newSprite->loadFromFile("assets/textures/background.jpg");
+
+            newSprite->setTilePosition( x, y, m_TileSize );
+            newSprite->setScale( m_TileSize/128, m_TileSize/128 );
             m_StaticMap.push_back( newSprite );
-            newSprite->setPosition( x*tileSize, y*tileSize );
-            newSprite->setScale( tileSize/96, tileSize/96 );
         }
-        std::cout << std::endl;
     }
 
     // set up dynamic tiles
@@ -112,14 +107,23 @@ bool Game::loadLevel( const std::string& levelName )
         for( std::size_t x = 0; x != m_Collection->getSizeX(); ++x )
         {
             char tile = m_Collection->getTile( x, y );
-            AnimatedSprite* newSprite = new AnimatedSprite();
 
-            switch( tile )
+            if( tile == '$' || tile == '*' )
             {
-                case '$' || '*' :
-                    newSprite->loadFromFile("assets/textures/box.gif");
-                    break;
+                AnimatedSprite* newSprite = new AnimatedSprite();
+                newSprite->loadFromFile("assets/textures/box.png");
+                newSprite->setTilePosition( x, y, m_TileSize );
+                newSprite->setScale( m_TileSize/128, m_TileSize/128 );
+                m_Boxes.push_back( newSprite );
             }
+            if( !m_Player && tile == '@' )
+            {
+                m_Player = new AnimatedSprite();
+                m_Player->loadFromFile("assets/textures/player.png");
+                m_Player->setTilePosition( x, y, m_TileSize );
+                m_Player->setScale( m_TileSize/128, m_TileSize/128 );
+            }
+
         }
     }
 
@@ -134,6 +138,8 @@ void Game::render( sf::RenderTarget* target )
 
     for( std::vector<AnimatedSprite*>::iterator it = m_Boxes.begin(); it != m_Boxes.end(); ++it )
         target->draw( (*it)->getSprite() );
+
+    target->draw( m_Player->getSprite() );
 }
 
 // ----------------------------------------------------------------------------
@@ -145,6 +151,8 @@ void Game::onUpdate( const sf::Time& delta )
 // ----------------------------------------------------------------------------
 void Game::onKeyPress( sf::Event& event )
 {
+    if( !m_Collection ) return;
+
     if( event.key.code == sf::Keyboard::Up )
         m_Collection->moveUp();
     if( event.key.code == sf::Keyboard::Down )
@@ -158,5 +166,29 @@ void Game::onKeyPress( sf::Event& event )
 // ----------------------------------------------------------------------------
 void Game::onSetTile( const std::size_t& x, const std::size_t& y, const char& tile )
 {
-    std::size_t pos = y*m_Collection->getSizeX() + x;
+    std::cout << "updating tile " << tile << " at position " << x << "," << y << std::endl;
+
+    // new player position
+    if( tile == '@' || tile == '+' )
+        m_Player->setPosition( x*m_TileSize, y*m_TileSize );
+
+    // new book position
+    if( tile == '$' || tile == '*' );
+
+}
+
+// ----------------------------------------------------------------------------
+void Game::onMoveTile( const std::size_t& oldX, const std::size_t& oldY, const std::size_t& newX, const std::size_t& newY )
+{
+    std::cout << "moving tile at position " << oldX << "," << oldY << " to position " << newX << "," << newY << std::endl;
+
+    // move boxes
+    for( std::vector<AnimatedSprite*>::iterator it = m_Boxes.begin(); it != m_Boxes.end(); ++it )
+    {
+        if( (*it)->getTilePositionX() == oldX && (*it)->getTilePositionY() == oldY )
+        {
+            (*it)->setTilePosition( newX, newY, m_TileSize );
+            break;
+        }
+    }
 }

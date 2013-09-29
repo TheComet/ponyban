@@ -30,7 +30,9 @@ std::map<std::string, sf::Texture*> AnimatedSprite::m_TextureMap;
 AnimatedSprite::AnimatedSprite( void ) :
     m_IsPlaying( false ),
     m_FrameDelay( sf::milliseconds(15.0f) ), // default setting
-    m_Texture(0)
+    m_Texture(0),
+    m_TileX(0),
+    m_TileY(0)
 {
     m_AnimatedSpriteList.push_back( this );
 }
@@ -106,6 +108,27 @@ bool AnimatedSprite::loadFromFile( const std::string& fileName, const unsigned l
 void AnimatedSprite::setPosition( const float& x, const float& y )
 {
     m_Sprite.setPosition( x, y );
+
+}
+
+// ----------------------------------------------------------------------------
+void AnimatedSprite::setTilePosition( const std::size_t& x, const std::size_t& y, const float& tileSize )
+{
+    m_Sprite.setPosition( x*tileSize, y*tileSize );
+    this->m_TileX = x;
+    this->m_TileY = y;
+}
+
+// ----------------------------------------------------------------------------
+std::size_t AnimatedSprite::getTilePositionX( void )
+{
+    return m_TileX;
+}
+
+// ----------------------------------------------------------------------------
+std::size_t AnimatedSprite::getTilePositionY( void )
+{
+    return m_TileY;
 }
 
 // ----------------------------------------------------------------------------

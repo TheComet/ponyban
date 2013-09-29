@@ -103,6 +103,28 @@ public:
     void setPosition( const float& x, const float& y );
 
     /*!
+     * @brief Sets the tile position of the sprite
+     * Animated sprites can also be positioned on the screen with the assumption
+     * that they are part of a tile-based system. The coordinates are whole numbers
+     * and represent the sprite's position on a grid. The tile size parameter is used
+     * to set the screen position of the sprite correctly.
+     * @param x A whole number representing the x-coordinate of the sprite on a grid
+     * @param y A whole number representing the y-coordinate of the sprite on a grid
+     * @param tileSize The actual size the sprite should have in pixels
+     */
+    void setTilePosition( const std::size_t& x, const std::size_t& y, const float& tileSize );
+
+    /*!
+     * @brief Retrieves the X tile coordinate of the sprite
+     */
+    std::size_t getTilePositionX( void );
+
+    /*!
+     * @brief Retrieves the Y tile coordinate of the sprite
+     */
+    std::size_t getTilePositionY( void );
+
+    /*!
      * @brief Sets the global scale of the sprite
      * The scale is a factor of the original size, which by
      * default is 1,1
@@ -184,6 +206,9 @@ private:
 
     unsigned long m_FrameMax;
     unsigned long m_CurrentFrame;
+
+    std::size_t m_TileX;
+    std::size_t m_TileY;
 
     bool m_IsPlaying;
 
