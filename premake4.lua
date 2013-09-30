@@ -11,7 +11,7 @@ if os.get() == "windows" then
 	-- global header include directories
 	headerSearchDirs = {
 		rootDir_SFML .. "/include",
-		"dependencies/chocobun/chocobun-core/",
+		"chocobun/chocobun-core/",
 
 		"include"
 	}
@@ -19,7 +19,9 @@ if os.get() == "windows" then
 	-- lib include directories
 	libSearchDirs = {
 		rootDir_SFML .. "/lib",
-		"dependencies/chocobun/lib"
+		"chocobun/chocobun-core/bin/debug",
+		"chocobun/chocobun-core/bin/release",
+		"chocobun/chocobun-core/bin/lib"
 	}
 	
 	-- link libraries
@@ -135,7 +137,7 @@ solution "Ponyban"
 			targetdir "bin/debug"
 			targetsuffix "_d"
 			if os.get() == "windows" then
-				implibdir = "bin/lib"
+				implibdir "bin/lib"
 			end
 			defines {
 				"DEBUG",
