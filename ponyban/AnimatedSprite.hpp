@@ -29,6 +29,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+#include <TextureResource.hpp>
+
 // ----------------------------------------------------------------------------
 // forward declarations
 
@@ -62,7 +64,8 @@
  * }
  * @endcode
  */
-class AnimatedSprite
+class AnimatedSprite :
+    public TextureResource
 {
 public:
 
@@ -101,6 +104,28 @@ public:
      * @param y The y-coordinate to set it to
      */
     void setPosition( const float& x, const float& y );
+
+    /*!
+     * @brief Sets the tile position of the sprite
+     * Animated sprites can also be positioned on the screen with the assumption
+     * that they are part of a tile-based system. The coordinates are whole numbers
+     * and represent the sprite's position on a grid. The tile size parameter is used
+     * to set the screen position of the sprite correctly.
+     * @param x A whole number representing the x-coordinate of the sprite on a grid
+     * @param y A whole number representing the y-coordinate of the sprite on a grid
+     * @param tileSize The actual size the sprite should have in pixels
+     */
+    void setTilePosition( const std::size_t& x, const std::size_t& y, const float& tileSize );
+
+    /*!
+     * @brief Retrieves the X tile coordinate of the sprite
+     */
+    std::size_t getTilePositionX( void );
+
+    /*!
+     * @brief Retrieves the Y tile coordinate of the sprite
+     */
+    std::size_t getTilePositionY( void );
 
     /*!
      * @brief Sets the global scale of the sprite
@@ -168,14 +193,8 @@ public:
      */
     const sf::Sprite& getSprite( void ) const;
 
-    /*!
-     * @brief Gets a pointer to the underlying texture object.
-     */
-    const sf::Texture* const getTexturePtr( void ) const;
-
 private:
 
-    sf::Texture* m_Texture;
     sf::Sprite m_Sprite;
     sf::Time m_FrameDelay;
     sf::Time m_TimePassed;
@@ -185,10 +204,10 @@ private:
     unsigned long m_FrameMax;
     unsigned long m_CurrentFrame;
 
-    bool m_IsPlaying;
+    std::size_t m_TileX;
+    std::size_t m_TileY;
 
-    static std::vector<AnimatedSprite*> m_AnimatedSpriteList;
-    static std::map<std::string, sf::Texture*> m_TextureMap;
+    bool m_IsPlaying;
 };
 
 #endif // __ANIMATED_SPRITE_HPP__

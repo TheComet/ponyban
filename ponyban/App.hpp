@@ -19,25 +19,21 @@
 // include files
 
 #include <EventDispatcher.hpp>
-#include <ChocobunInterface.hpp>
 
 // ----------------------------------------------------------------------------
 // forward declarations
 
 namespace sf {
     class RenderWindow;
-    class Sprite;
-    class Texture;
 }
 
-class AnimatedSprite;
+class Game;
 
 /*!
  * @brief Application object for this game
  */
 class App :
-    public EventDispatcherListener,
-    public Chocobun::LevelListener
+    public EventDispatcherListener
 {
 public:
 
@@ -63,12 +59,10 @@ private:
      */
     void onShutdown( void );
 
-    void onKeyPress( sf::Event& event );
-    void onSetTile( const std::size_t& x, const std::size_t& y, const char& tile );
-
     sf::RenderWindow* m_Window;
+
     EventDispatcher* m_EventDispatcher;
+    Game* m_Game;
+
     bool m_Shutdown;
-    Chocobun::Collection* m_Collection;
-    std::vector<AnimatedSprite*> m_Map;
 };
