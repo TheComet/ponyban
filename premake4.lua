@@ -13,7 +13,7 @@ if os.get() == "windows" then
 		rootDir_SFML .. "/include",
 		"dependencies/chocobun/chocobun-core/",
 
-		"include"
+		"ponyban"
 	}
 	
 	-- lib include directories
@@ -24,10 +24,16 @@ if os.get() == "windows" then
 	
 	-- link libraries
 	linklibs_ponyban_debug = {
-		"chocobun-core_d"
+		"chocobun-core_d",
+		"sfml-system-d",
+		"sfml-window-d",
+		"sfml-graphics-d"
 	}
 	linklibs_ponyban_release = {
-		"chocobun-core"
+		"chocobun-core",
+		"sfml-system",
+		"sfml-window",
+		"sfml-graphics"
 	}
 
 elseif os.get() == "linux" then
@@ -38,7 +44,7 @@ elseif os.get() == "linux" then
 		"/usr/include",
 		"/usr/local/include/",
 
-		"include"
+		"ponyban"
 	}
 
 	-- lib include directories
@@ -57,7 +63,10 @@ elseif os.get() == "linux" then
 		"sfml-graphics"
 	}
 	linklibs_ponyban_release = {
-		"chocobun-core"
+		"chocobun-core",
+		"sfml-system",
+		"sfml-window",
+		"sfml-graphics"
 	}
 	
 -- MAAAC
@@ -81,10 +90,16 @@ elseif os.get() == "macosx" then
 
 	-- link libraries
 	linklibs_ponyban_debug = {
-		"chocobun-core_d"
+		"chocobun-core_d",
+		"sfml-system",
+		"sfml-window",
+		"sfml-graphics"
 	}
 	linklibs_ponyban_release = {
-		"chocobun-core"
+		"chocobun-core",
+		"sfml-system",
+		"sfml-window",
+		"sfml-graphics"
 	}
 
 -- OS couldn't be determined
@@ -105,7 +120,7 @@ solution "Ponyban"
 	-------------------------------------------------------------------
 	
 	-- Windows specific
-	if os.get() == "Windows" then
+	if os.get() == "windows" then
 		defines {
 			"WIN32",
 			"_WINDOWS"
@@ -165,8 +180,8 @@ solution "Ponyban"
 		kind "ConsoleApp"
 		language "C++"
 		files {
-			"src/**.cpp",
-			"include/**.hpp"
+			"ponyban/**.cpp",
+			"ponyban/**.hpp"
 		}
 		
 		includedirs (headerSearchDirs)
