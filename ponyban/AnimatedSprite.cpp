@@ -23,82 +23,36 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-std::vector<AnimatedSprite*> AnimatedSprite::m_AnimatedSpriteList;
-std::map<std::string, sf::Texture*> AnimatedSprite::m_TextureMap;
-
 // ----------------------------------------------------------------------------
 AnimatedSprite::AnimatedSprite( void ) :
     m_IsPlaying( false ),
     m_FrameDelay( sf::milliseconds(15.0f) ), // default setting
-    m_Texture(0),
     m_TileX(0),
     m_TileY(0)
 {
-    m_AnimatedSpriteList.push_back( this );
 }
 
 // ----------------------------------------------------------------------------
 AnimatedSprite::~AnimatedSprite( void )
 {
 
-    // erase from sprite list and check if texture
-    // is referenced by any other sprites
-    bool doErase = true;
-    for( std::vector<AnimatedSprite*>::iterator it = m_AnimatedSpriteList.begin(); it != m_AnimatedSpriteList.end(); ++it )
-    {
-        if( (*it) == this )
-            it = m_AnimatedSpriteList.erase( it );
-        if( it == m_AnimatedSpriteList.end() )
-            break;
 
-        if( (*it)->getTexturePtr() == m_Texture )
-            doErase = false;
-    }
-
-    // erase texture from list if it is not referenced any more
-    if( doErase )
-    {
-        for( std::map<std::string, sf::Texture*>::iterator it = m_TextureMap.begin(); it != m_TextureMap.end(); ++it )
-        {
-            if( it->second == m_Texture )
-            {
-                m_TextureMap.erase( it );
-                break;
-            }
-        }
-    }
 }
 
 // ----------------------------------------------------------------------------
 bool AnimatedSprite::loadFromFile( const std::string& fileName, const unsigned long& splitX, const unsigned long& splitY, const unsigned long& frameCount )
 {
 
-    // load texture, or reference an existing texture
-    std::map<std::string, sf::Texture*>::iterator textureIt = m_TextureMap.find( fileName );
-    if( textureIt == m_TextureMap.end() )
-    {
-        m_Texture = new sf::Texture();
-        if( !m_Texture->loadFromFile(fileName) )
-        {
-            delete m_Texture;
-            return false;
-        }
-        m_Texture->setSmooth( true );
-        m_TextureMap[fileName] = m_Texture;
-        std::cout << "loaded texture " << fileName << std::endl;
-    }else
-    {
-        m_Texture = textureIt->second;
-        std::cout << "re-used texture " << fileName << std::endl;
-    }
+    // load texture
+    this->loadTextureFromFile( fileName );
 
     if( !frameCount ) m_FrameMax = splitX * splitY - 1; else m_FrameMax = frameCount-1; // frame count starts at 0, not 1
     m_Split.x = splitX;
     m_Split.y = splitY;
-    m_Size = m_Texture->getSize();
+    m_Size = this->getTexturePtr()->getSize();
     m_Size.x /= splitX;
     m_Size.y /= splitY;
-    m_Sprite.setTexture( *m_Texture );
+    m_Sprite.setTexture( this->getTexture() );
     this->setFrame(0);
 
     return true;
@@ -193,10 +147,4 @@ void AnimatedSprite::setFrameDelay( const sf::Time& time )
 const sf::Sprite& AnimatedSprite::getSprite( void ) const
 {
     return m_Sprite;
-}
-
-// ----------------------------------------------------------------------------
-const sf::Texture* const AnimatedSprite::getTexturePtr( void ) const
-{
-    return m_Texture;
 }

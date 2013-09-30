@@ -29,6 +29,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+#include <TextureResource.hpp>
+
 // ----------------------------------------------------------------------------
 // forward declarations
 
@@ -62,7 +64,8 @@
  * }
  * @endcode
  */
-class AnimatedSprite
+class AnimatedSprite :
+    public TextureResource
 {
 public:
 
@@ -190,14 +193,8 @@ public:
      */
     const sf::Sprite& getSprite( void ) const;
 
-    /*!
-     * @brief Gets a pointer to the underlying texture object.
-     */
-    const sf::Texture* const getTexturePtr( void ) const;
-
 private:
 
-    sf::Texture* m_Texture;
     sf::Sprite m_Sprite;
     sf::Time m_FrameDelay;
     sf::Time m_TimePassed;
@@ -211,9 +208,6 @@ private:
     std::size_t m_TileY;
 
     bool m_IsPlaying;
-
-    static std::vector<AnimatedSprite*> m_AnimatedSpriteList;
-    static std::map<std::string, sf::Texture*> m_TextureMap;
 };
 
 #endif // __ANIMATED_SPRITE_HPP__

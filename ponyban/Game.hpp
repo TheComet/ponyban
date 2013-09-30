@@ -86,6 +86,11 @@ public:
     bool loadCollection( const std::string& fileName );
 
     /*!
+     * @brief Unloads everything
+     */
+    void unload( void );
+
+    /*!
      * @brief Loads a level so it can be played on
      *
      * @remarks The collection must be loaded first for this method to work.

@@ -37,6 +37,7 @@ Game::Game( void ) :
 // ----------------------------------------------------------------------------
 Game::~Game( void )
 {
+    this->unload();
 }
 
 // ----------------------------------------------------------------------------
@@ -56,11 +57,29 @@ void Game::setScreenResolution( const sf::Vector2u& resolution )
 bool Game::loadCollection( const std::string& fileName )
 {
     if( m_Collection )
-        delete m_Collection;
+        this->unload();
     m_Collection = new Chocobun::Collection( fileName );
     m_Collection->initialise();
     m_Collection->addLevelListener( this );
     return true;
+}
+
+// ----------------------------------------------------------------------------
+void Game::unload( void )
+{
+
+    // delete all sprites
+    if( m_Player ){ delete m_Player; m_Player = 0; }
+    for( std::vector<AnimatedSprite*>::iterator it = m_Boxes.begin(); it != m_Boxes.end(); ++it )
+        delete (*it);
+    for( std::vector<AnimatedSprite*>::iterator it =m_StaticMap.begin(); it != m_StaticMap.end(); ++it )
+        delete (*it);
+    m_Boxes.clear();
+    m_StaticMap.clear();
+
+    // delete collection
+    if( m_Collection ){ delete m_Collection; m_Collection = 0; }
+
 }
 
 // ----------------------------------------------------------------------------
@@ -89,11 +108,20 @@ bool Game::loadLevel( const std::string& levelName )
             AnimatedSprite* newSprite = new AnimatedSprite();
 
             if( tile == '.' || tile == '*' || tile == '+' )
-                newSprite->loadFromFile("assets/textures/goal.png");
+            {
+                if( !newSprite->loadFromFile("assets/textures/goal.png") )
+                    return false;
+            }
             else if( tile == '#' )
-                newSprite->loadFromFile("assets/textures/wall.png");
+            {
+                if( !newSprite->loadFromFile("assets/textures/wall.png") )
+                    return false;
+            }
             else
-                newSprite->loadFromFile("assets/textures/background.jpg");
+            {
+                if( !newSprite->loadFromFile("assets/textures/background.jpg") )
+                    return false;
+            }
 
             newSprite->setTilePosition( x, y, m_TileSize );
             newSprite->setScale( m_TileSize/128, m_TileSize/128 );
@@ -111,7 +139,8 @@ bool Game::loadLevel( const std::string& levelName )
             if( tile == '$' || tile == '*' )
             {
                 AnimatedSprite* newSprite = new AnimatedSprite();
-                newSprite->loadFromFile("assets/textures/box.png");
+                if( !newSprite->loadFromFile("assets/textures/box.png") )
+                    return false;
                 newSprite->setTilePosition( x, y, m_TileSize );
                 newSprite->setScale( m_TileSize/128, m_TileSize/128 );
                 m_Boxes.push_back( newSprite );
@@ -119,7 +148,8 @@ bool Game::loadLevel( const std::string& levelName )
             if( !m_Player && tile == '@' )
             {
                 m_Player = new AnimatedSprite();
-                m_Player->loadFromFile("assets/textures/player.png");
+                if( !m_Player->loadFromFile("assets/textures/player.png") )
+                    return false;
                 m_Player->setTilePosition( x, y, m_TileSize );
                 m_Player->setScale( m_TileSize/128, m_TileSize/128 );
             }
