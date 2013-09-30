@@ -22,11 +22,14 @@
 // include files
 
 #include <EventDispatcher.hpp>
+#include <TextureResource.hpp>
 
 // ----------------------------------------------------------------------------
 // forward declarations
 
-class Button : public EventDispatcherListener
+class Button :
+    public EventDispatcherListener,
+    public TextureResource
 {
 public:
 
@@ -41,9 +44,6 @@ public:
     ~Button( void );
 
 private:
-
-    /*!
-     *
 
 };
 
