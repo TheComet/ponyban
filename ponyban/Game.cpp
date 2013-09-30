@@ -199,7 +199,7 @@ void Game::onSetTile( const std::size_t& x, const std::size_t& y, const char& ti
     std::cout << "updating tile " << tile << " at position " << x << "," << y << std::endl;
 
     // new player position
-    if( tile == '@' || tile == '+' )
+    if( m_Player && (tile == '@' || tile == '+') )
         m_Player->setPosition( x*m_TileSize, y*m_TileSize );
 
 }
