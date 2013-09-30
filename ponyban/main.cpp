@@ -37,6 +37,9 @@ int main( int argc, char** argv )
 
     delete theApp;
 
+    std::cout << "Process ended successfully." << std::endl;
+    std::cout << std::endl;
+    std::cout << "Press Enter to quit..." << std::endl;
 	std::cin.ignore();
 
     return 0;
