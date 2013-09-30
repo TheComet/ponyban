@@ -86,6 +86,8 @@ bool TextureResource::loadTextureFromFile( const std::string& fileName )
         m_Texture = textureIt->second;
         std::cout << "re-used texture " << fileName << std::endl;
     }
+
+	return true;
 }
 
 // ----------------------------------------------------------------------------

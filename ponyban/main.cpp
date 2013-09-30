@@ -37,5 +37,7 @@ int main( int argc, char** argv )
 
     delete theApp;
 
+	std::cin.ignore();
+
     return 0;
 }

@@ -202,9 +202,6 @@ void Game::onSetTile( const std::size_t& x, const std::size_t& y, const char& ti
     if( tile == '@' || tile == '+' )
         m_Player->setPosition( x*m_TileSize, y*m_TileSize );
 
-    // new book position
-    if( tile == '$' || tile == '*' );
-
 }
 
 // ----------------------------------------------------------------------------

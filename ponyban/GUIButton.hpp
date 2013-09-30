@@ -15,8 +15,8 @@
  * along with Ponyban.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __BUTTON_HPP__
-#define __BUTTON_HPP__
+#ifndef __GUI_BUTTON_HPP__
+#define __GUI_BUTTON_HPP__
 
 // ----------------------------------------------------------------------------
 // include files
@@ -27,7 +27,7 @@
 // ----------------------------------------------------------------------------
 // forward declarations
 
-class Button :
+class GUIButton :
     public EventDispatcherListener,
     public TextureResource
 {
@@ -36,15 +36,15 @@ public:
     /*!
      * @brief Default constructor
      */
-    Button( void );
+    GUIButton( void );
 
     /*!
      * @brief Default destructor
      */
-    ~Button( void );
+    ~GUIButton( void );
 
 private:
 
 };
 
-#endif // __BUTTON_HPP__
+#endif // __GUI_BUTTON_HPP__

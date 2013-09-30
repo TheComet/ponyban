@@ -26,7 +26,7 @@
 // ----------------------------------------------------------------------------
 AnimatedSprite::AnimatedSprite( void ) :
     m_IsPlaying( false ),
-    m_FrameDelay( sf::milliseconds(15.0f) ), // default setting
+    m_FrameDelay( sf::milliseconds(15) ), // default setting
     m_TileX(0),
     m_TileY(0)
 {
@@ -62,7 +62,6 @@ bool AnimatedSprite::loadFromFile( const std::string& fileName, const unsigned l
 void AnimatedSprite::setPosition( const float& x, const float& y )
 {
     m_Sprite.setPosition( x, y );
-
 }
 
 // ----------------------------------------------------------------------------
