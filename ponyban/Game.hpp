@@ -80,10 +80,12 @@ public:
      * @remarks If a collection is already loaded when this method is called,
      * it is unloaded and replaced by the new one. If the new collection fails
      * to load, the old one will remain unloaded.
+     * @exception Depending on the parser chosen, this method can throw a
+     * Chocobun::Exception if anything fails.
      * @param fileName The name of the collection file to parse
      * @return Returns true if loading the collection was successful
      */
-    bool loadCollection( const std::string& fileName );
+    void loadCollection( const std::string& fileName );
 
     /*!
      * @brief Unloads everything
@@ -98,9 +100,10 @@ public:
      * If a level is already loaded when this method is called, it is
      * unloaded and replaced by the new one. If the new level fails to load,
      * the old one will remain unloaded.
+     * @exception Chocobun::Exception if loading the level was unsuccessful
      * @param levelName The name of the level to load
      */
-    bool loadLevel( const std::string& levelName );
+    void loadLevel( const std::string& levelName );
 
     /*!
      * @brief Renders all graphics to a render target

@@ -54,9 +54,28 @@ public:
      */
     virtual ~TextureResource( void );
 
-    bool loadTextureFromFile( const std::string& fileName );
+protected:
 
+    /*!
+     * @brief Loads a texture from a given file
+     * @param fileName The file name of the texture to load
+     * @exception Throws a Chocobun::Exception if the texture couldn't be
+     * loaded
+     */
+    void loadTextureFromFile( const std::string& fileName );
+
+    /*!
+     * @brief Gets a pointer to the underlying texture object
+     * @note The texture should be loaded before this is called.
+     * If it isn't, a null-pointer is returned.
+     */
     const sf::Texture* getTexturePtr( void ) const;
+
+    /*!
+     * @brief Gets the underlying texture object
+     * @note The texture should be loaded before this is called.
+     * If it isn't, the program will crash.
+     */
     const sf::Texture& getTexture( void ) const;
 
 private:

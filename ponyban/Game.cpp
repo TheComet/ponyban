@@ -54,19 +54,21 @@ void Game::setScreenResolution( const sf::Vector2u& resolution )
 }
 
 // ----------------------------------------------------------------------------
-bool Game::loadCollection( const std::string& fileName )
+void Game::loadCollection( const std::string& fileName )
 {
     if( m_Collection )
         this->unload();
     m_Collection = new Chocobun::Collection( fileName );
     m_Collection->initialise();
     m_Collection->addLevelListener( this );
-    return true;
 }
 
 // ----------------------------------------------------------------------------
 void Game::unload( void )
 {
+
+    // removing ourselves as a listener is taken care of automatically when the
+    // collection is deleted
 
     // delete all sprites
     if( m_Player ){ delete m_Player; m_Player = 0; }
@@ -83,13 +85,13 @@ void Game::unload( void )
 }
 
 // ----------------------------------------------------------------------------
-bool Game::loadLevel( const std::string& levelName )
+void Game::loadLevel( const std::string& levelName )
 {
-    if( !m_Collection ) return false;
+    if( !m_Collection )
+        throw Chocobun::Exception( "[Game::loadLevel] Unable to load a level because the collection hasn't been loaded yet." );
 
     m_Collection->setActiveLevel( levelName );
-    if( !m_Collection->validateLevel() )
-        return false;
+    m_Collection->validateLevel();
 
     // prerequisits
     m_TileSize = m_ScreenResolution.x / static_cast<float>(m_Collection->getSizeX());
@@ -110,17 +112,17 @@ bool Game::loadLevel( const std::string& levelName )
             if( tile == '.' || tile == '*' || tile == '+' )
             {
                 if( !newSprite->loadFromFile("assets/textures/goal.png") )
-                    return false;
+                    throw Chocobun::Exception("[Game::loadLevel] Failed ot load the file \"assets/textures/goal.png\". Are you sure it exists?");
             }
             else if( tile == '#' )
             {
                 if( !newSprite->loadFromFile("assets/textures/wall.png") )
-                    return false;
+                    throw Chocobun::Exception("[Game::loadLevel] Failed ot load the file \"assets/textures/wall.png\". Are you sure it exists?");
             }
             else
             {
                 if( !newSprite->loadFromFile("assets/textures/background.jpg") )
-                    return false;
+                    throw Chocobun::Exception("[Game::loadLevel] Failed ot load the file \"assets/textures/background.jpg\". Are you sure it exists?");
             }
 
             newSprite->setTilePosition( x, y, m_TileSize );
@@ -140,7 +142,7 @@ bool Game::loadLevel( const std::string& levelName )
             {
                 AnimatedSprite* newSprite = new AnimatedSprite();
                 if( !newSprite->loadFromFile("assets/textures/box.png") )
-                    return false;
+                    throw Chocobun::Exception("[Game::loadLevel] Failed ot load the file \"assets/textures/box.png\". Are you sure it exists?");
                 newSprite->setTilePosition( x, y, m_TileSize );
                 newSprite->setScale( m_TileSize/128, m_TileSize/128 );
                 m_Boxes.push_back( newSprite );
@@ -149,15 +151,13 @@ bool Game::loadLevel( const std::string& levelName )
             {
                 m_Player = new AnimatedSprite();
                 if( !m_Player->loadFromFile("assets/textures/player.png") )
-                    return false;
+                    throw Chocobun::Exception("[Game::loadLevel] Failed ot load the file \"assets/textures/player.png\". Are you sure it exists?");
                 m_Player->setTilePosition( x, y, m_TileSize );
                 m_Player->setScale( m_TileSize/128, m_TileSize/128 );
             }
 
         }
     }
-
-    return true;
 }
 
 // ----------------------------------------------------------------------------

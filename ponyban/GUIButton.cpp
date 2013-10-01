@@ -29,3 +29,9 @@ GUIButton::GUIButton( void )
 GUIButton::~GUIButton( void )
 {
 }
+
+// ----------------------------------------------------------------------------
+void GUIButton::load( const std::string& fileName )
+{
+
+}

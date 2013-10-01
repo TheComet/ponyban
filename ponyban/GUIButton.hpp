@@ -27,6 +27,10 @@
 // ----------------------------------------------------------------------------
 // forward declarations
 
+namespace sf {
+    class Sprite;
+}
+
 class GUIButton :
     public EventDispatcherListener,
     public TextureResource
@@ -43,7 +47,11 @@ public:
      */
     ~GUIButton( void );
 
+    void load( const std::string& fileName );
+
 private:
+
+    sf::Sprite* m_Sprite;
 
 };
 

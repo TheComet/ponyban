@@ -18,6 +18,7 @@
 // ----------------------------------------------------------------------------
 // include files
 
+#include <ChocobunInterface.hpp>
 #include <TextureResource.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <iostream>
@@ -67,7 +68,7 @@ TextureResource::~TextureResource( void )
 }
 
 // ----------------------------------------------------------------------------
-bool TextureResource::loadTextureFromFile( const std::string& fileName )
+void TextureResource::loadTextureFromFile( const std::string& fileName )
 {
     std::map<std::string, sf::Texture*>::iterator textureIt = m_TextureMap.find( fileName );
     if( textureIt == m_TextureMap.end() )
@@ -76,7 +77,7 @@ bool TextureResource::loadTextureFromFile( const std::string& fileName )
         if( !m_Texture->loadFromFile(fileName) )
         {
             delete m_Texture;
-            return false;
+            throw Chocobun::Exception( "[TextureResource::loadTextureFromFile] Failed to load texture \"" + fileName + "\"" );
         }
         m_Texture->setSmooth( true );
         m_TextureMap[fileName] = m_Texture;
@@ -86,8 +87,6 @@ bool TextureResource::loadTextureFromFile( const std::string& fileName )
         m_Texture = textureIt->second;
         std::cout << "re-used texture " << fileName << std::endl;
     }
-
-	return true;
 }
 
 // ----------------------------------------------------------------------------
