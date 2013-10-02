@@ -22,18 +22,17 @@
 // include files
 
 #include <EventDispatcher.hpp>
-#include <TextureResource.hpp>
+#include <AnimatedSprite.hpp>
+
+#include <string>
 
 // ----------------------------------------------------------------------------
 // forward declarations
 
-namespace sf {
-    class Sprite;
-}
+class AnimatedSprite;
 
 class GUIButton :
-    public EventDispatcherListener,
-    public TextureResource
+    public EventDispatcherListener
 {
 public:
 
@@ -47,11 +46,13 @@ public:
      */
     ~GUIButton( void );
 
-    void load( const std::string& fileName );
+    bool load( const std::string& fileName );
+    void setPosition( const float& x, const float& y );
+    void render( sf::RenderTarget* target );
 
 private:
 
-    sf::Sprite* m_Sprite;
+    AnimatedSprite m_Sprite;
 
 };
 

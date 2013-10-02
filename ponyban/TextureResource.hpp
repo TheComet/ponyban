@@ -59,10 +59,9 @@ protected:
     /*!
      * @brief Loads a texture from a given file
      * @param fileName The file name of the texture to load
-     * @exception Throws a Chocobun::Exception if the texture couldn't be
-     * loaded
+     * @return Returns true if the texture could be loaded, false if otherwise
      */
-    void loadTextureFromFile( const std::string& fileName );
+    bool loadTextureFromFile( const std::string& fileName );
 
     /*!
      * @brief Gets a pointer to the underlying texture object

@@ -87,9 +87,17 @@ void Game::unload( void )
 // ----------------------------------------------------------------------------
 void Game::loadLevel( const std::string& levelName )
 {
+
+    // note that it is OK to throw exceptions here without first deleting the
+    // AnimatedSprite objects, provided they are first added to one of the lists
+    // and provided the Game object is eventually deleted, because its
+    // destructor is responsible for cleaning up any sprites.
+
     if( !m_Collection )
         throw Chocobun::Exception( "[Game::loadLevel] Unable to load a level because the collection hasn't been loaded yet." );
 
+    // the validate method will throw an exception if the level is not valid,
+    // let it fall through to the top level handler instead of re-throwing.
     m_Collection->setActiveLevel( levelName );
     m_Collection->validateLevel();
 
@@ -97,17 +105,17 @@ void Game::loadLevel( const std::string& levelName )
     m_TileSize = m_ScreenResolution.x / static_cast<float>(m_Collection->getSizeX());
     if( m_TileSize > m_ScreenResolution.y / static_cast<float>(m_Collection->getSizeY()) )
         m_TileSize = m_ScreenResolution.y / static_cast<float>(m_Collection->getSizeY());
-    std::cout << "dimensions: " << m_Collection->getSizeX() << "," << m_Collection->getSizeY() << std::endl;
-    std::cout << "tile size: " << m_TileSize << std::endl;
-
 
     // set up static tiles
+    // static tiles are tiles that will not move, and are stored in a 2D array.
+    // these are drawn behind all other tiles.
     for( std::size_t y = 0; y != m_Collection->getSizeY(); ++y )
     {
         for( std::size_t x = 0; x != m_Collection->getSizeX(); ++x )
         {
             char tile = m_Collection->getTile( x, y );
             AnimatedSprite* newSprite = new AnimatedSprite();
+            m_StaticMap.push_back( newSprite );
 
             if( tile == '.' || tile == '*' || tile == '+' )
             {
@@ -127,11 +135,11 @@ void Game::loadLevel( const std::string& levelName )
 
             newSprite->setTilePosition( x, y, m_TileSize );
             newSprite->setScale( m_TileSize/128, m_TileSize/128 );
-            m_StaticMap.push_back( newSprite );
         }
     }
 
     // set up dynamic tiles
+    // dynamic tiles are tiles that can be moved, and draw over static tiles.
     for( std::size_t y = 0; y != m_Collection->getSizeY(); ++y )
     {
         for( std::size_t x = 0; x != m_Collection->getSizeX(); ++x )
@@ -141,11 +149,11 @@ void Game::loadLevel( const std::string& levelName )
             if( tile == '$' || tile == '*' )
             {
                 AnimatedSprite* newSprite = new AnimatedSprite();
+                m_Boxes.push_back( newSprite );
                 if( !newSprite->loadFromFile("assets/textures/box.png") )
                     throw Chocobun::Exception("[Game::loadLevel] Failed ot load the file \"assets/textures/box.png\". Are you sure it exists?");
                 newSprite->setTilePosition( x, y, m_TileSize );
                 newSprite->setScale( m_TileSize/128, m_TileSize/128 );
-                m_Boxes.push_back( newSprite );
             }
             if( !m_Player && tile == '@' )
             {
@@ -169,7 +177,8 @@ void Game::render( sf::RenderTarget* target )
     for( std::vector<AnimatedSprite*>::iterator it = m_Boxes.begin(); it != m_Boxes.end(); ++it )
         target->draw( (*it)->getSprite() );
 
-    target->draw( m_Player->getSprite() );
+    if( m_Player )
+        target->draw( m_Player->getSprite() );
 }
 
 // ----------------------------------------------------------------------------
@@ -215,7 +224,7 @@ void Game::onMoveTile( const std::size_t& oldX, const std::size_t& oldY, const s
         if( (*it)->getTilePositionX() == oldX && (*it)->getTilePositionY() == oldY )
         {
             (*it)->setTilePosition( newX, newY, m_TileSize );
-            break;
+            return;
         }
     }
 }

@@ -68,7 +68,7 @@ TextureResource::~TextureResource( void )
 }
 
 // ----------------------------------------------------------------------------
-void TextureResource::loadTextureFromFile( const std::string& fileName )
+bool TextureResource::loadTextureFromFile( const std::string& fileName )
 {
     std::map<std::string, sf::Texture*>::iterator textureIt = m_TextureMap.find( fileName );
     if( textureIt == m_TextureMap.end() )
@@ -77,7 +77,7 @@ void TextureResource::loadTextureFromFile( const std::string& fileName )
         if( !m_Texture->loadFromFile(fileName) )
         {
             delete m_Texture;
-            throw Chocobun::Exception( "[TextureResource::loadTextureFromFile] Failed to load texture \"" + fileName + "\"" );
+                return false;
         }
         m_Texture->setSmooth( true );
         m_TextureMap[fileName] = m_Texture;
@@ -87,6 +87,8 @@ void TextureResource::loadTextureFromFile( const std::string& fileName )
         m_Texture = textureIt->second;
         std::cout << "re-used texture " << fileName << std::endl;
     }
+
+    return true;
 }
 
 // ----------------------------------------------------------------------------

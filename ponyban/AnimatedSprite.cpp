@@ -44,7 +44,8 @@ bool AnimatedSprite::loadFromFile( const std::string& fileName, const unsigned l
 {
 
     // load texture
-    this->loadTextureFromFile( fileName );
+    if( !this->loadTextureFromFile( fileName ) )
+        return false;
 
     if( !frameCount ) m_FrameMax = splitX * splitY - 1; else m_FrameMax = frameCount-1; // frame count starts at 0, not 1
     m_Split.x = splitX;

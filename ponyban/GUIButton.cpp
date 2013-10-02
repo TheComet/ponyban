@@ -19,6 +19,11 @@
 // include files
 
 #include <GUIButton.hpp>
+#include <AnimatedSprite.hpp>
+
+#include <ChocobunInterface.hpp>
+
+#include <SFML/Graphics/RenderTarget.hpp>
 
 // ----------------------------------------------------------------------------
 GUIButton::GUIButton( void )
@@ -31,7 +36,21 @@ GUIButton::~GUIButton( void )
 }
 
 // ----------------------------------------------------------------------------
-void GUIButton::load( const std::string& fileName )
+bool GUIButton::load( const std::string& fileName )
 {
+    if( !m_Sprite.loadFromFile(fileName) )
+        return false;
+    return true;
+}
 
+// ----------------------------------------------------------------------------
+void GUIButton::setPosition( const float& x, const float& y )
+{
+    m_Sprite.setPosition( x, y );
+}
+
+// ----------------------------------------------------------------------------
+void GUIButton::render( sf::RenderTarget* target )
+{
+    target->draw( m_Sprite.getSprite() );
 }
