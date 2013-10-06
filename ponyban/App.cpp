@@ -58,7 +58,7 @@ void App::go( void )
     m_Game->setScreenResolution( m_Window->getSize().x, m_Window->getSize().y );
     m_EventDispatcher->registerListener( m_Game );
 
-    /*try
+    try
     {
         m_Game->loadCollection("collections/ksokoban-original.sok");
         m_Game->loadLevel("Level #1");
@@ -66,10 +66,10 @@ void App::go( void )
     catch( const std::exception& e )
     {
 
-    }*/
-
+    }
+/*
     Overlay test( 0, 0, 800, 600 );
-    test.createButton( "my_button", "assets/buttons/test.png");
+    test.createButton( "my_button", "assets/buttons/test.png");*/
 
     sf::Clock clock;
     clock.restart();
@@ -85,7 +85,7 @@ void App::go( void )
 
         // render everything
         m_Game->render( m_Window );
-        test.render( m_Window );
+        //test.render( m_Window );
 
         m_Window->display();
 

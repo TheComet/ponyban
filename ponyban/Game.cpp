@@ -200,6 +200,8 @@ void Game::onKeyPress( sf::Event& event )
         m_Collection->moveLeft();
     if( event.key.code == sf::Keyboard::Right )
         m_Collection->moveRight();
+    if( event.key.code == sf::Keyboard::Z )
+        m_Collection->undo();
 }
 
 // ----------------------------------------------------------------------------
