@@ -11,7 +11,7 @@ if os.get() == "windows" then
 	-- global header include directories
 	headerSearchDirs = {
 		rootDir_SFML .. "/include",
-		"dependencies/chocobun/chocobun-core/",
+		"../dependencies/chocobun/chocobun-core/",
 
 		"ponyban"
 	}
@@ -42,7 +42,7 @@ elseif os.get() == "linux" then
 
 	-- header search directories
 	headerSearchDirs = {
-		"dependencies/chocobun/chocobun-core",
+		"../dependencies/chocobun/chocobun-core",
 		"/usr/include",
 		"/usr/local/include/",
 
@@ -51,7 +51,7 @@ elseif os.get() == "linux" then
 
 	-- lib include directories
 	libSearchDirs = {
-		"dependencies/chocobun/bin/debug",
+		"../dependencies/chocobun/bin/debug",
 		"bin/debug",
 		"/usr/lib",
 		"/usr/local/lib"
@@ -76,7 +76,7 @@ elseif os.get() == "macosx" then
 
 	-- header search directories
 	headerSearchDirs = {
-		"dependencies/chocobun/chocobun-core",
+		"../dependencies/chocobun/chocobun-core",
 		"/usr/include/",
 
 		"include"
@@ -84,7 +84,7 @@ elseif os.get() == "macosx" then
 
 	-- lib include directories
 	libSearchDirs = {
-		"dependencies/chocobun/bin/debug",
+		"../dependencies/chocobun/bin/debug",
 		"bin/debug",
 		"/usr/local/lib",
 		"/usr/lib"
@@ -142,8 +142,8 @@ solution "Ponyban"
 		kind "SharedLib"
 		language "C++"
 		files {
-			"dependencies/chocobun/chocobun-core/**.hpp",
-			"dependencies/chocobun/chocobun-core/**.cpp"
+			"../dependencies/chocobun/chocobun-core/**.hpp",
+			"../dependencies/chocobun/chocobun-core/**.cpp"
 		}
 
 		includedirs (headerSearchDirs)
