@@ -19,3 +19,4 @@ ponyban-cpp/build/*
 
 # Temporary files
 *~
+*.swp
