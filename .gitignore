@@ -13,9 +13,9 @@
 *.a
 
 # Generated directories
-bin/*
-doc/html/*
-build/*
+ponyban-cpp/bin/*
+ponyban-cpp/doc/html/*
+ponyban-cpp/build/*
 
 # Temporary files
 *~
