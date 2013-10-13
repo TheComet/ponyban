@@ -61,7 +61,7 @@ void App::go( void )
     try
     {
         m_Game->loadCollection("collections/ksokoban-original.sok");
-        m_Game->loadLevel("Level #48");
+        m_Game->loadLevel("Level #1");
     }
     catch( const std::exception& e )
     {
